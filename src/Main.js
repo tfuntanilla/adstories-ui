@@ -11,6 +11,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import MovieFilterIcon from '@material-ui/icons/MovieFilter';
+import Paper from '@material-ui/core/Paper';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
@@ -50,45 +51,78 @@ const styles = theme => ({
     padding: `${theme.spacing.unit * 8}px 0`,
   },
   card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
+    minWidth: 188,
+    maxWidth: 188,
+    minHeight: 100,
+    maxHeight: 100
   },
-  cardMedia: {
-    paddingTop: '56.25%', // 16:9
+  paper: {
+    paddingTop: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing.unit * 2,
+    paddingRight: theme.spacing.unit * 2
   },
-  cardContent: {
-    flexGrow: 1,
+  storyCard: {
+    maxWidth: 250,
+    maxHeight: 445,
+    minWidth: 250,
+    minHeight: 445,
   },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing.unit * 6,
-  },
+  storyText: {
+    maxWidth: 250,
+    maxHeight: 445,
+    minWidth: 250,
+    minHeight: 445,
+    marginTop: 30,
+    marginBottom: 30,
+    marginRight: 10,
+    marginLeft: 10,
+    fontSize: 24,
+    fontWeight: 750
+  }
 });
 
 const stories = {
-  width: 500,
-  height: 500,
   backgroundImage: "linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1)"
 }
 
+const cards = [1, 2, 3, 4, 5];
+
 function Main(props) {
   const { classes } = props;
-  const products = ["Instant Pot"]
-  const events = ["Day-based", "Black Friday", "Christmas"]
+  const events = ["Day of the week", "Black Friday", "Christmas"]
 
   const eventMap = {
-    "day-based": "day_based"
+    "Day of the week": "day_based",
+    "Black Friday": "black_friday",
+    "Christmas": "christmas"
   }
 
   function handleClick() {
     var text;
     var category = document.getElementsByName("event")[0].value;
-    category = eventMap[category.toLowerCase()];
-    fetch("http://localhost:5000/gen_text?category=" + category)
+    category = eventMap[category];
+    fetch("http://localhost:5000/gen_stories?category=" + category)
     .then(function(response) {
-      response.text().then(function(text) {
-        document.getElementById("text").innerHTML = text;
+      response.json().then(function(body) {
+
+        var storyText = document.getElementById("storyText");
+        storyText.innerHTML = body.text;
+        storyText.setAttribute("style", "color: " + body.fontColor);
+
+        var textPaper = document.getElementById("textPaper");
+        textPaper.innerHTML = body.text;
+        textPaper.setAttribute("style", "display: visible");
+
+        var storyCard = document.getElementById("storyCard");
+        storyCard.setAttribute("style", "background-image: " + body.backgroundImage);
+
+        var colorPalette = body.colorPalette;
+        colorPalette.forEach(function(color, index) {
+          var colorBox = document.getElementById("color" + (index + 1));
+          colorBox.setAttribute("style", "background-color:" + color)
+        });
+
       })
     })
   }
@@ -109,18 +143,15 @@ function Main(props) {
         <div className={classes.heroUnit}>
           <div className={classes.heroContent}>
             <Typography component="h3" variant="h4" align="center" color="textPrimary" gutterBottom>
-              Create promotional content for your product.
+              Create promotional stories for your product.
             </Typography>
             <Typography variant="h6" align="center" color="textSecondary" paragraph>
             Use the generator below to create samples.
             </Typography>
             <div className={classes.heroButtons}>
               <Grid container spacing={8} justify="center">
-                <Grid item xs={4}>
-                  <SimpleSelect label="Product" name='product' menuItems={products}/>
-                </Grid>
-                <Grid item xs={4}>
-                  <SimpleSelect label="Event" name='event' menuItems={events}/>
+                <Grid item xs={16}>
+                  <SimpleSelect label="Ads for..." name='event' menuItems={events}/>
                 </Grid>
               </Grid>
               <div className={classes.heroButtons}>
@@ -135,9 +166,19 @@ function Main(props) {
         </div>
         <div className={classNames(classes.layout, classes.cardGrid)}>
           {/* End hero unit */}
-          <Grid container spacing={40}>
-            <div style={{width: stories.width, height: stories.height, backgroundImage: stories.backgroundImage}}>
-            <div id="text"></div>
+          <Grid container spacing={24} justify="center">
+            <Grid item sm={12} md={12} lg={12}>
+              <Paper className={classes.paper} id="textPaper" style={{display: "none"}}></Paper>
+            </Grid>
+            {cards.map(card => (
+              <Grid item key={card} sm={6} md={4} lg={2}>
+                <div className={classes.card} id={"color" + card}>
+                </div>
+              </Grid>
+            ))}
+            <div className={classes.stories} id="storyCard">
+              <div className={classes.storyText} id="storyText">
+              </div>
             </div>
           </Grid>
         </div>
