@@ -20,7 +20,7 @@ const styles = theme => ({
   },
   formControl: {
     margin: theme.spacing.unit,
-    minWidth: 170,
+    minWidth: 180,
     maxWidth: 300,
   },
   selectEmpty: {
@@ -30,7 +30,7 @@ const styles = theme => ({
 
 class SimpleSelect extends React.Component {
   state = {
-    category: '',
+    item: '',
     labelWidth: 0,
   };
 
@@ -41,11 +41,19 @@ class SimpleSelect extends React.Component {
   }
 
   handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+    this.setState({ item: event.target.value });
   };
 
   render() {
     const { classes } = this.props;
+    const menuItems = this.props.menuItems;
+    const name = this.props.name;
+
+    const menuItemsList = []
+    menuItems.forEach(function(item) {
+      menuItemsList.push(
+        <MenuItem value={item}>{item}</MenuItem>)
+    });
 
     return (
       <form className={classes.root} autoComplete="off">
@@ -59,8 +67,9 @@ class SimpleSelect extends React.Component {
           {this.props.label}
           </InputLabel>
           <Select
-            value={this.state.category}
+            value={this.state.item}
             onChange={this.handleChange}
+            name={name}
             input={
               <OutlinedInput
               labelWidth={this.state.labelWidth}
@@ -68,12 +77,7 @@ class SimpleSelect extends React.Component {
               />
             }
           >
-            <MenuItem value="">
-            <em>General</em>
-            </MenuItem>
-            <MenuItem value={10}>Accessories</MenuItem>
-            <MenuItem value={20}>Camera</MenuItem>
-            <MenuItem value={30}>Speakers</MenuItem>
+            {menuItemsList}
           </Select>
         </FormControl>
       </form>
