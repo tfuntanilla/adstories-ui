@@ -10,6 +10,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import MovieFilterIcon from '@material-ui/icons/MovieFilter';
 import Paper from '@material-ui/core/Paper';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -64,9 +65,9 @@ const styles = theme => ({
   },
   storyCard: {
     maxWidth: 250,
-    maxHeight: 445,
+    maxHeight: 450,
     minWidth: 250,
-    minHeight: 445,
+    minHeight: 450,
   },
   storyText: {
     maxWidth: 250,
@@ -78,7 +79,8 @@ const styles = theme => ({
     marginRight: 10,
     marginLeft: 10,
     fontSize: 24,
-    fontWeight: 750
+    fontWeight: 750,
+    textAlign: "left"
   }
 });
 
@@ -90,38 +92,50 @@ const cards = [1, 2, 3, 4, 5];
 
 function Main(props) {
   const { classes } = props;
-  const events = ["Day of the week", "Black Friday", "Christmas"]
+  const events = ["Random", "Day of the week", "Christmas"]
 
   const eventMap = {
+    "Random": "full_data",
     "Day of the week": "day_based",
-    "Black Friday": "black_friday",
     "Christmas": "christmas"
   }
 
   function handleClick() {
+
+    var progress = document.getElementById("progress");
+    progress.setAttribute("style", "display: visible");
+
     var text;
     var category = document.getElementsByName("event")[0].value;
     category = eventMap[category];
+    if (category == undefined) {
+      category = "full_data"
+    }
+
     fetch("http://localhost:5000/gen_stories?category=" + category)
     .then(function(response) {
       response.json().then(function(body) {
 
         var storyText = document.getElementById("storyText");
         storyText.innerHTML = body.text;
-        storyText.setAttribute("style", "color: " + body.fontColor);
+        storyText.setAttribute("style", "color: " + body.fontColor +
+                                        "; background-color: " + body.textBackgroundColor);
 
         var textPaper = document.getElementById("textPaper");
         textPaper.innerHTML = body.text;
         textPaper.setAttribute("style", "display: visible");
 
         var storyCard = document.getElementById("storyCard");
-        storyCard.setAttribute("style", "background-image: " + body.backgroundImage);
+        storyCard.setAttribute("style", body.label + ": " + body.backgroundImage);
 
         var colorPalette = body.colorPalette;
         colorPalette.forEach(function(color, index) {
           var colorBox = document.getElementById("color" + (index + 1));
           colorBox.setAttribute("style", "background-color:" + color)
         });
+
+        var progress = document.getElementById("progress");
+        progress.setAttribute("style", "display: none");
 
       })
     })
@@ -166,6 +180,7 @@ function Main(props) {
         </div>
         <div className={classNames(classes.layout, classes.cardGrid)}>
           {/* End hero unit */}
+          <LinearProgress id="progress" style={{display: "none"}}/>
           <Grid container spacing={24} justify="center">
             <Grid item sm={12} md={12} lg={12}>
               <Paper className={classes.paper} id="textPaper" style={{display: "none"}}></Paper>
@@ -177,7 +192,8 @@ function Main(props) {
               </Grid>
             ))}
             <div className={classes.stories} id="storyCard">
-              <div className={classes.storyText} id="storyText">
+              <div className={classes.storyText}>
+                  <span id="storyText"></span>
               </div>
             </div>
           </Grid>
