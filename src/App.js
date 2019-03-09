@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import './App.css';
+import './css/App.css';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
 
-import MainApp from './Main';
+import Home from './components/Home';
 
 const theme = createMuiTheme({
   palette: {
@@ -18,7 +17,7 @@ class App extends Component {
     return (
       <div className="App">
         <MuiThemeProvider theme={theme}>
-          <MainApp/>
+          <Home/>
         </MuiThemeProvider>
       </div>
     );
