@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { generateAPI } from '../redux/Actions';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import AppBar from '@material-ui/core/AppBar';
@@ -11,7 +13,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
-import AdStory from './AdStory.js'
+import AdStory from './AdStory';
 
 const styles = theme => ({
   appBar: {
@@ -61,71 +63,97 @@ const styles = theme => ({
   },
 });
 
-function Home(props) {
-  const { classes } = props;
+class Home extends React.Component {
 
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <AppBar position="static" className={classes.appBar}>
-        <Toolbar>
-          <PhotoAlbumIcon className={classes.icon} />
-          <Typography variant="h6" color="inherit" noWrap>
-            AdStories
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <main>
-        {/* Hero unit */}
-        <div className={classes.heroUnit}>
-          <div className={classes.heroContent}>
-            <Typography component="h3" variant="h4" align="center" color="textPrimary" gutterBottom>
-              Promote your content with visual stories
+  state = {
+    keywords: ''
+  };
+
+  _generate() {
+    const requestBody = this.state;
+    this.props.generate(requestBody);
+  }
+
+  handleChange = name => event => {
+    this.setState({[name]: event.target.value});
+  };
+
+  handleClick() {
+    this._generate();
+  }
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <React.Fragment>
+        <CssBaseline />
+        <AppBar position="static" className={classes.appBar}>
+          <Toolbar>
+            <PhotoAlbumIcon className={classes.icon} />
+            <Typography variant="h6" color="inherit" noWrap>
+              AdStories
             </Typography>
-            <Typography variant="h6" align="center" color="textSecondary" paragraph>
-              Get started
-            </Typography>
-            <div className={classes.heroButtons}>
-              <TextField
-                id="outlined-full-width"
-                label="Keywords"
-                style={{ margin: 8 }}
-                placeholder="What is your content about? Leave this blank to generate a random example."
-                helperText="E.g. instant pot, black friday, christmas"
-                fullWidth
-                margin="normal"
-                variant="outlined"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <Grid container spacing={16} justify="center">
-                <Grid item>
-                  <Button variant="contained" color="primary">
-                    Generate
-                  </Button>
+          </Toolbar>
+        </AppBar>
+        <main>
+          {/* Hero unit */}
+          <div className={classes.heroUnit}>
+            <div className={classes.heroContent}>
+              <Typography component="h3" variant="h4" align="center" color="textPrimary" gutterBottom>
+                Promote your content with visual stories
+              </Typography>
+              <Typography variant="h6" align="center" color="textSecondary" paragraph>
+                Get started
+              </Typography>
+              <div className={classes.heroButtons}>
+                <TextField
+                  id="outlined-full-width"
+                  label="Keywords"
+                  style={{ margin: 8 }}
+                  placeholder="What is your content about? Or leave this blank to generate a random example."
+                  helperText="E.g. instant pot, black friday, christmas"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                  value={this.state.keywords}
+                  onChange={this.handleChange('keywords')}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+                <Grid container spacing={16} justify="center">
+                  <Grid item>
+                    <Button variant="contained" color="primary" onClick={() => this.handleClick()}>
+                      Generate
+                    </Button>
+                  </Grid>
                 </Grid>
-              </Grid>
+              </div>
             </div>
           </div>
-        </div>
-        <div className={classNames(classes.layout, classes.cardGrid)}>
-          <AdStory/>
-        </div>
-      </main>
-      {/* Footer */}
-      <footer className={classes.footer}>
-        <Typography variant="h6" align="center" gutterBottom>
-          The End.
-        </Typography>
-      </footer>
-      {/* End footer */}
-    </React.Fragment>
-  );
+          <div className={classNames(classes.layout, classes.cardGrid)}>
+            <AdStory/>
+          </div>
+        </main>
+        {/* Footer */}
+        <footer className={classes.footer}>
+          <Typography variant="h6" align="center" gutterBottom>
+            The End.
+          </Typography>
+        </footer>
+        {/* End footer */}
+      </React.Fragment>
+    );
+  }
 }
 
 Home.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Home);
+const mapDispatchToProps = dispatch => ({
+  generate: requestBody => dispatch(generateAPI(requestBody))
+})
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(Home));
