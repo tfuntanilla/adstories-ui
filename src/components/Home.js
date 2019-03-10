@@ -7,6 +7,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import PhotoAlbumIcon from '@material-ui/icons/PhotoAlbum';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -131,6 +132,8 @@ class Home extends React.Component {
               </div>
             </div>
           </div>
+          {this.props.status === 'PENDING' ?
+            <LinearProgress color="secondary" /> : ""}
           <div className={classNames(classes.layout, classes.cardGrid)}>
             <AdStory design={this.props.design}/>
           </div>
@@ -152,6 +155,7 @@ Home.propTypes = {
 };
 
 const mapStateToProps = store => ({
+  status: store.Reducer.status,
   design: store.Reducer.results
 });
 

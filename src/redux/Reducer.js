@@ -8,7 +8,7 @@ const defaultState = {
 export default function generate(state = defaultState, action) {
   switch(action.type) {
     case GENERATE_PENDING: {
-      return {...state, status: 'PENDING'}
+      return {...state, pending: true, status: 'PENDING'}
     }
     case GENERATE_DONE: {
       return {results: action.results, status: 'DONE'}

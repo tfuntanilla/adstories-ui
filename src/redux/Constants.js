@@ -1,2 +1,2 @@
-export const GENERATE_PENDING = "GENERATE_PENDING",
-             GENERATE_DONE = "GENERATE_DONE";
+export const GENERATE_PENDING = "PENDING",
+             GENERATE_DONE = "DONE";
