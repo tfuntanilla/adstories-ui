@@ -5,12 +5,12 @@ import { generateAPIRequest } from './Services.js';
 
 const generatePending = () => ({
   type: GENERATE_PENDING,
-  results: []
+  results: {}
 });
 
 function generateDone(status, resp) {
-  const data = _.get(resp, 'results.Data', '[]');
-  let results = status === 'success' ? JSON.parse(data): [];
+  const data = _.get(resp, 'results', '{}');
+  let results = status === 'success' ? data: {};
   return {
     type: GENERATE_DONE,
     results
@@ -22,7 +22,7 @@ export const generateAPI = requestBody => {
     dispatch(generatePending());
     return generateAPIRequest(requestBody)
       .then(
-        res => dispatch(generateDone('success', res)),
+        resp => dispatch(generateDone('success', resp)),
         error => dispatch(generateDone('error', error))
       );
   };

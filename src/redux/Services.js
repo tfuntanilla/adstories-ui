@@ -11,7 +11,7 @@ export function post(path, requestBody = {}) {
 }
 
 export async function generateAPIRequest(requestBody) {
-  return await post('/gen', requestBody)
+  return await post('/generate', requestBody)
     .then(resp => ({
       results: resp.body
     }));
