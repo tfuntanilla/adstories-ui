@@ -16,6 +16,8 @@ import { withStyles } from '@material-ui/core/styles';
 
 import AdStory from './AdStory';
 
+import html2canvas from 'html2canvas';
+
 const styles = theme => ({
   appBar: {
     position: 'relative',
@@ -70,6 +72,17 @@ class Home extends React.Component {
     keywords: ''
   };
 
+  _downloadImage() {
+      let view = document.querySelector('#AdStory');
+
+      html2canvas(view).then((canvas) => {
+          let a = document.createElement('a');
+          a.href = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+          a.download = 'adstory.png';
+          a.click();
+      });
+  }
+
   _generate() {
     const requestBody = this.state;
     this.props.generate(requestBody);
@@ -81,6 +94,10 @@ class Home extends React.Component {
 
   handleClick() {
     this._generate();
+  }
+
+  handleDownload() {
+    this._downloadImage();
   }
 
   render() {
@@ -111,8 +128,8 @@ class Home extends React.Component {
                   id="outlined-full-width"
                   label="Keywords"
                   style={{ margin: 8 }}
-                  placeholder="What is your content about? Or leave this blank to generate a random example."
-                  helperText="E.g. instant pot, black friday, christmas"
+                  placeholder="Name an event or leave this blank to generate a random example."
+                  helperText="E.g. daily deals, black friday, prime day, or christmas."
                   fullWidth
                   margin="normal"
                   variant="outlined"
@@ -134,9 +151,17 @@ class Home extends React.Component {
           </div>
           {this.props.status === 'PENDING' ?
             <LinearProgress color="secondary" /> : ""}
-          <div className={classNames(classes.layout, classes.cardGrid)}>
-            <AdStory design={this.props.design}/>
-          </div>
+            <div className={classNames(classes.layout, classes.cardGrid)}>
+              <AdStory design={this.props.design}/>
+              <br/>
+              <Grid container spacing={16} justify="center">
+                <Grid item>
+                  <Button variant="contained" color="primary" onClick={() => this.handleDownload()}>
+                    Download
+                  </Button>
+                </Grid>
+              </Grid>
+            </div>
         </main>
         {/* Footer */}
         <footer className={classes.footer}>

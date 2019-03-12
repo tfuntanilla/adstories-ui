@@ -45,9 +45,10 @@ function AdStory(props) {
         .setAttribute('style', 'background-image: ' + props.design.backgroundImage);
   }
 
-  const fontColor = props.design.fontColor ? props.design.fontColor : "#000000"
+  const fontColor = props.design.fontColor ? props.design.fontColor : '#000000'
   const fontSize = props.design.fontSize ? props.design.fontSize : 18
   const fontWeight = props.design.fontFace ? props.design.fontWeight : 700
+  const fontStyle = props.design.fontStyle ? props.design.fontStyle : 'normal'
   const textAlign = props.design.textAlign ? props.design.textAlign : 'center'
 
   return (
@@ -61,7 +62,7 @@ function AdStory(props) {
                 <Grid item>
                   <div className={classes.boardContent} id="AdStory">
                     <div align={textAlign}
-                        style={{color: fontColor, fontSize: fontSize, fontWeight: 700}}>
+                        style={{color: fontColor, fontSize: fontSize, fontWeight: 700, fontStyle: fontStyle}}>
                       {text === undefined ? "Your AdStory will appear here" : text}
                     </div>
                   </div>
