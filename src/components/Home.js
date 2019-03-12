@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { generateAPI } from '../redux/Actions';
 import PropTypes from 'prop-types';
@@ -64,6 +65,9 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing.unit * 3,
   },
+  toolbarTitle: {
+    flex: 1,
+  }
 });
 
 class Home extends React.Component {
@@ -107,10 +111,15 @@ class Home extends React.Component {
         <CssBaseline />
         <AppBar position="static" className={classes.appBar}>
           <Toolbar>
-            <PhotoAlbumIcon className={classes.icon} />
-            <Typography variant="h6" color="inherit" noWrap>
-              AdStories
+            <PhotoAlbumIcon className={classes.icon}/>
+            <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
+              <Link to="/" style={{textDecoration: 'none', color: '#FFF', cursor: 'pointer'}}>
+                AdStories
+              </Link>
             </Typography>
+            <Link to="/examples" style={{textDecoration: 'none', color: '#FFF'}}>
+              <Button color="inherit">Examples</Button>
+            </Link>
           </Toolbar>
         </AppBar>
         <main>

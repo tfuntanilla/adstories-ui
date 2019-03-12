@@ -1,11 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-
 
 const styles = theme => ({
   board: {
@@ -62,7 +59,7 @@ function AdStory(props) {
                 <Grid item>
                   <div className={classes.boardContent} id="AdStory">
                     <div align={textAlign}
-                        style={{color: fontColor, fontSize: fontSize, fontWeight: 700, fontStyle: fontStyle}}>
+                        style={{color: fontColor, fontSize: fontSize, fontWeight: fontWeight, fontStyle: fontStyle}}>
                       {text === undefined ? "Your AdStory will appear here" : text}
                     </div>
                   </div>

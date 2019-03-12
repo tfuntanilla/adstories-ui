@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import thunkMiddleware from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
@@ -10,6 +11,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
 
 import Home from './components/Home';
+import Examples from './components/Examples';
 
 const theme = createMuiTheme({
   palette: {
@@ -33,7 +35,12 @@ class App extends Component {
       <Provider store={store}>
         <div className="App">
           <MuiThemeProvider theme={theme}>
-            <Home/>
+            <Router>
+              <main>
+                <Route exact path="/" component={Home}/>
+                <Route exact path="/examples" component={Examples}/>
+              </main>
+            </Router>
           </MuiThemeProvider>
         </div>
       </Provider>
