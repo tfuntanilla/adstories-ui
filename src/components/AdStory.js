@@ -27,7 +27,7 @@ const styles = theme => ({
 function AdStory(props) {
   const { classes } = props;
 
-  const text = props.design.text;
+  const text = props.design.text === undefined ? "Your AdStory will appear here" : props.design.text
 
   if (props.design.boardColor) {
       document.getElementById("AdStoryBoard")
@@ -60,7 +60,7 @@ function AdStory(props) {
                   <div className={classes.boardContent} id="AdStory">
                     <div align={textAlign}
                         style={{color: fontColor, fontSize: fontSize, fontWeight: fontWeight, fontStyle: fontStyle}}>
-                      {text === undefined ? "Your AdStory will appear here" : text}
+                      {text}
                     </div>
                   </div>
                 </Grid>
